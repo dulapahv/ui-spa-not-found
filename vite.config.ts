@@ -1,11 +1,12 @@
-import { defineConfig } from "vitest/config";
+import { copyFileSync } from "node:fs";
+import { defineConfig } from "vite";
 
-// Served from a subpath (dulapahv.dev/not-found), so every asset URL must be
-// prefixed with /not-found/ — otherwise the browser would request assets from
-// the domain root, outside this Worker's route.
 export default defineConfig({
-  base: "/not-found/",
-  test: {
-    environment: "jsdom",
-  },
+  plugins: [
+    {
+      name: "emit-ui-spa-not-found",
+      apply: "build",
+      closeBundle: () => copyFileSync("dist/index.html", "dist/404.html"),
+    },
+  ],
 });
